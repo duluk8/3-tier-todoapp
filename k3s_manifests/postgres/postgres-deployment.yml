@@ -31,3 +31,16 @@ spec:
                   key: POSTGRES_PASSWORD
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d
+              readOnly: true
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: init-script
+          configMap:
+            name: postgres-init-configmap
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc
